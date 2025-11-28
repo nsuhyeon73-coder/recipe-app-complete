@@ -1,37 +1,36 @@
 import { useState, useEffect } from "react";
 
 function RouletteModal({ onClose, onSelectRecipe, language }) {
-  const [stage, setStage] = useState(1); // 1: 요리 종류 선택, 2: 음식 선택
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedCuisine, setSelectedCuisine] = useState(null);
   const [rotation, setRotation] = useState(0);
-  const [recipes, setRecipes] = useState([]);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const cuisines = [
     {
       id: "korean",
       name: language === "ko" ? "한식" : "Korean",
       color: "#FFB6C1",
-      search: "korean",
+      area: "Korean", // TheMealDB API area 값
     },
     {
       id: "western",
       name: language === "ko" ? "양식" : "Western",
       color: "#FFE66D",
-      search: "american",
+      area: "American", // 양식 = American
     },
     {
       id: "chinese",
       name: language === "ko" ? "중식" : "Chinese",
       color: "#87CEEB",
-      search: "chinese",
+      area: "Chinese", // 중식 = Chinese
     },
     {
       id: "japanese",
       name: language === "ko" ? "일식" : "Japanese",
       color: "#98D8C8",
-      search: "japanese",
+      area: "Japanese", // 일식 = Japanese
     },
   ];
 
@@ -42,7 +41,65 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
     };
   }, []);
 
-  const spinFirstRoulette = () => {
+  const fetchRandomRecipe = async (area) => {
+    setLoading(true);
+    console.log("Fetching recipe for area:", area); // 디버깅용
+
+    try {
+      // 해당 지역의 레시피 가져오기
+      const response = await fetch(
+        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
+      );
+      const data = await response.json();
+      console.log("API Response:", data); // 디버깅용
+
+      if (data.meals && data.meals.length > 0) {
+        // 랜덤하게 하나 선택
+        const randomMeal =
+          data.meals[Math.floor(Math.random() * data.meals.length)];
+        console.log("Selected meal:", randomMeal); // 디버깅용
+
+        // 상세 정보 가져오기
+        const detailResponse = await fetch(
+          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${randomMeal.idMeal}`
+        );
+        const detailData = await detailResponse.json();
+
+        if (detailData.meals) {
+          setSelectedRecipe(detailData.meals[0]);
+          setLoading(false);
+
+          // 2초 후 레시피 상세 모달 열기
+          setTimeout(() => {
+            onSelectRecipe(detailData.meals[0].idMeal);
+            onClose();
+          }, 2500);
+        }
+      } else {
+        console.log("No meals found for area:", area); // 디버깅용
+        // 해당 지역에 레시피가 없으면 랜덤 레시피
+        const fallbackResponse = await fetch(
+          "https://www.themealdb.com/api/json/v1/1/random.php"
+        );
+        const fallbackData = await fallbackResponse.json();
+
+        if (fallbackData.meals) {
+          setSelectedRecipe(fallbackData.meals[0]);
+          setLoading(false);
+
+          setTimeout(() => {
+            onSelectRecipe(fallbackData.meals[0].idMeal);
+            onClose();
+          }, 2500);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching recipe:", error);
+      setLoading(false);
+    }
+  };
+
+  const spinRoulette = () => {
     if (isSpinning) return;
 
     setIsSpinning(true);
@@ -54,88 +111,16 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
 
     setTimeout(() => {
       const normalizedRotation = totalRotation % 360;
-      const adjustedRotation = (normalizedRotation + 45) % 360; // 45도 조정 (화살표가 12시 방향)
+      const adjustedRotation = (normalizedRotation + 45) % 360; // 45도 조정
       const selectedIndex = Math.floor(adjustedRotation / 90);
       const selected = cuisines[selectedIndex % cuisines.length];
 
+      console.log("Selected cuisine:", selected); // 디버깅용
       setSelectedCuisine(selected);
       setIsSpinning(false);
 
-      // 잠시 후 2단계로 이동
-      setTimeout(() => {
-        setStage(2);
-        fetchRecipes(selected.search);
-      }, 1500);
-    }, 3000);
-  };
-
-  const fetchRecipes = async (area) => {
-    try {
-      // 해당 지역의 레시피 여러 개 가져오기
-      const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
-      );
-      const data = await response.json();
-
-      if (data.meals && data.meals.length > 0) {
-        // 랜덤하게 섞기
-        const shuffled = data.meals.sort(() => Math.random() - 0.5).slice(0, 8);
-        setRecipes(shuffled);
-      } else {
-        // 대체 검색
-        const fallbackResponse = await fetch(
-          "https://www.themealdb.com/api/json/v1/1/search.php?s="
-        );
-        const fallbackData = await fallbackResponse.json();
-        const shuffled = fallbackData.meals
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 8);
-        setRecipes(shuffled);
-      }
-    } catch (error) {
-      console.error("Error fetching recipes:", error);
-    }
-  };
-
-  const spinSecondRoulette = () => {
-    if (isSpinning || recipes.length === 0) return;
-
-    setIsSpinning(true);
-    const spins = 5 + Math.random() * 3;
-    const extraDegrees = Math.floor(Math.random() * 360);
-    const totalRotation = rotation + spins * 360 + extraDegrees;
-
-    setRotation(totalRotation);
-
-    setTimeout(async () => {
-      const normalizedRotation = totalRotation % 360;
-      const adjustedRotation =
-        (normalizedRotation + 360 / recipes.length / 2) % 360;
-      const selectedIndex = Math.floor(
-        adjustedRotation / (360 / recipes.length)
-      );
-      const selected = recipes[selectedIndex % recipes.length];
-
-      // 상세 정보 가져오기
-      try {
-        const response = await fetch(
-          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${selected.idMeal}`
-        );
-        const data = await response.json();
-        if (data.meals) {
-          setSelectedRecipe(data.meals[0]);
-          setIsSpinning(false);
-
-          // 잠시 후 레시피 상세 보기
-          setTimeout(() => {
-            onSelectRecipe(data.meals[0].idMeal);
-            onClose();
-          }, 2000);
-        }
-      } catch (error) {
-        console.error("Error fetching recipe details:", error);
-        setIsSpinning(false);
-      }
+      // 선택된 요리 종류의 랜덤 레시피 가져오기
+      fetchRandomRecipe(selected.area); // area 사용
     }, 3000);
   };
 
@@ -171,8 +156,8 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
             </svg>
           </button>
 
-          {/* Stage 1: 요리 종류 선택 */}
-          {stage === 1 && (
+          {/* 레시피 선택 전 */}
+          {!selectedRecipe && (
             <div className="text-center">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">
                 {language === "ko"
@@ -185,7 +170,7 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
                   : "Spin the roulette to select cuisine type!"}
               </p>
 
-              {/* Roulette Wheel - Stage 1 - Pie Chart Style */}
+              {/* Roulette Wheel */}
               <div className="relative w-80 h-80 mx-auto mb-8">
                 {/* Wheel - SVG Pie Chart */}
                 <div
@@ -246,7 +231,7 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
                   </svg>
                 </div>
 
-                {/* Arrow - Fixed at top (not rotating) */}
+                {/* Arrow - Fixed at top */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 z-20 pointer-events-none">
                   <div className="w-0 h-0 border-l-[25px] border-l-transparent border-r-[25px] border-r-transparent border-t-[40px] border-t-gray-800 drop-shadow-lg"></div>
                 </div>
@@ -257,13 +242,13 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
 
               {/* Spin Button */}
               <button
-                onClick={spinFirstRoulette}
-                disabled={isSpinning}
+                onClick={spinRoulette}
+                disabled={isSpinning || loading}
                 className="px-10 py-4 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold rounded-full text-lg
                          hover:from-red-400 hover:to-red-500 transition-all shadow-xl shadow-red-500/30 
                          disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 mx-auto"
               >
-                {isSpinning ? (
+                {isSpinning || loading ? (
                   <>
                     <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
                     {language === "ko" ? "돌리는 중..." : "Spinning..."}
@@ -276,7 +261,7 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
                 )}
               </button>
 
-              {selectedCuisine && !isSpinning && (
+              {selectedCuisine && !isSpinning && !loading && (
                 <div className="mt-6 p-4 bg-green-100 rounded-xl border border-green-300">
                   <p className="text-green-800 font-bold text-xl">
                     🎉 {selectedCuisine.name}{" "}
@@ -287,156 +272,58 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
             </div>
           )}
 
-          {/* Stage 2: 음식 선택 */}
-          {stage === 2 && (
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                {language === "ko" ? "🍽️ 오늘의 메뉴는?" : "🍽️ Today's Menu?"}
-              </h2>
-              <p className="text-gray-600 mb-2">
-                <span className="text-gold-600 font-bold">
-                  {selectedCuisine?.name}
-                </span>{" "}
-                {language === "ko" ? "중에서 선택!" : "Cuisine"}
-              </p>
-              <p className="text-gray-500 text-sm mb-8">
+          {/* 레시피 로딩 중 */}
+          {loading && (
+            <div className="text-center py-12">
+              <div className="w-20 h-20 border-8 border-gold-200 border-t-gold-600 rounded-full animate-spin mx-auto mb-6"></div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                {language === "ko" ? "레시피 추천 중..." : "Finding Recipe..."}
+              </h3>
+              <p className="text-gray-600">
                 {language === "ko"
-                  ? "룰렛을 돌려 메뉴를 선택하세요!"
-                  : "Spin to select your menu!"}
+                  ? `${selectedCuisine?.name} 중에서 맛있는 레시피를 찾고 있어요!`
+                  : `Finding delicious ${selectedCuisine?.name} recipe!`}
               </p>
+            </div>
+          )}
 
-              {/* Roulette Wheel - Stage 2 */}
-              <div className="relative w-80 h-80 mx-auto mb-8">
-                {/* Wheel */}
-                <div
-                  className="w-full h-full relative"
-                  style={{
-                    transform: `rotate(${rotation}deg)`,
-                    transition: isSpinning
-                      ? "transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99)"
-                      : "none",
-                  }}
-                >
-                  <svg
-                    viewBox="0 0 100 100"
-                    className="w-full h-full rounded-full border-8 border-gray-800 shadow-2xl"
-                  >
-                    {recipes.map((recipe, index) => {
-                      const colors = [
-                        "#FFB6C1",
-                        "#FFE66D",
-                        "#87CEEB",
-                        "#98D8C8",
-                        "#F38181",
-                        "#AA96DA",
-                        "#FCBAD3",
-                        "#A8E6CF",
-                      ];
-                      const anglePerSlice = 360 / recipes.length;
-                      const startAngle =
-                        (index * anglePerSlice - 90) * (Math.PI / 180);
-                      const endAngle =
-                        ((index + 1) * anglePerSlice - 90) * (Math.PI / 180);
+          {/* 레시피 선택됨 */}
+          {selectedRecipe && !loading && (
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                {language === "ko"
+                  ? "🎊 오늘의 추천 메뉴!"
+                  : "🎊 Today's Recommendation!"}
+              </h2>
 
-                      const x1 = 50 + 50 * Math.cos(startAngle);
-                      const y1 = 50 + 50 * Math.sin(startAngle);
-                      const x2 = 50 + 50 * Math.cos(endAngle);
-                      const y2 = 50 + 50 * Math.sin(endAngle);
-
-                      const largeArcFlag = anglePerSlice > 180 ? 1 : 0;
-                      const pathData = `M 50 50 L ${x1} ${y1} A 50 50 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
-
-                      // 텍스트 위치
-                      const textAngle =
-                        startAngle + (anglePerSlice * Math.PI) / 180 / 2;
-                      const textX = 50 + 30 * Math.cos(textAngle);
-                      const textY = 50 + 30 * Math.sin(textAngle);
-
-                      return (
-                        <g key={recipe.idMeal}>
-                          <path
-                            d={pathData}
-                            fill={colors[index % colors.length]}
-                            stroke="#fff"
-                            strokeWidth="0.5"
-                          />
-                          <text
-                            x={textX}
-                            y={textY}
-                            textAnchor="middle"
-                            dominantBaseline="middle"
-                            fill="#333"
-                            fontSize="4"
-                            fontWeight="bold"
-                            transform={`rotate(${
-                              index * anglePerSlice
-                            }, ${textX}, ${textY})`}
-                          >
-                            {recipe.strMeal.length > 12
-                              ? recipe.strMeal.substring(0, 10) + "..."
-                              : recipe.strMeal}
-                          </text>
-                        </g>
-                      );
-                    })}
-                  </svg>
-                </div>
-
-                {/* Arrow - Fixed at top */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 z-20 pointer-events-none">
-                  <div className="w-0 h-0 border-l-[25px] border-l-transparent border-r-[25px] border-r-transparent border-t-[40px] border-t-gray-800 drop-shadow-lg"></div>
-                </div>
-
-                {/* Center Image or Icon */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-white border-4 border-gray-800 shadow-lg overflow-hidden z-10">
-                  {selectedRecipe && (
-                    <img
-                      src={selectedRecipe.strMealThumb}
-                      alt="Selected"
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                  {!selectedRecipe && (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-3xl">🍴</span>
-                    </div>
-                  )}
+              {/* Recipe Card */}
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl mb-6">
+                <img
+                  src={selectedRecipe.strMealThumb}
+                  alt={selectedRecipe.strMeal}
+                  className="w-full h-80 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <div className="inline-block px-4 py-2 rounded-full bg-gold-500 text-white font-bold mb-3">
+                    {selectedCuisine?.name}
+                  </div>
+                  <h3 className="text-3xl font-bold text-white mb-2">
+                    {selectedRecipe.strMeal}
+                  </h3>
+                  <p className="text-white/80">
+                    {selectedRecipe.strCategory} • {selectedRecipe.strArea}
+                  </p>
                 </div>
               </div>
 
-              {/* Spin Button */}
-              <button
-                onClick={spinSecondRoulette}
-                disabled={isSpinning || recipes.length === 0}
-                className="px-10 py-4 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold rounded-full text-lg
-                         hover:from-red-400 hover:to-red-500 transition-all shadow-xl shadow-red-500/30 
-                         disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 mx-auto"
-              >
-                {isSpinning ? (
-                  <>
-                    <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div>
-                    {language === "ko" ? "돌리는 중..." : "Spinning..."}
-                  </>
-                ) : (
-                  <>
-                    <span className="text-2xl">✓</span>
-                    {language === "ko" ? "선택완료" : "Confirm"}
-                  </>
-                )}
-              </button>
-
-              {selectedRecipe && !isSpinning && (
-                <div className="mt-6 p-4 bg-green-100 rounded-xl border border-green-300">
-                  <p className="text-green-800 font-bold text-xl">
-                    🎊 {selectedRecipe.strMeal}
-                  </p>
-                  <p className="text-green-600 text-sm mt-1">
-                    {language === "ko"
-                      ? "레시피를 확인하세요!"
-                      : "Check the recipe!"}
-                  </p>
-                </div>
-              )}
+              <div className="p-4 bg-green-100 rounded-xl border border-green-300">
+                <p className="text-green-800 font-bold text-lg">
+                  {language === "ko"
+                    ? "잠시 후 레시피 상세 정보를 보여드릴게요!"
+                    : "Recipe details coming up!"}
+                </p>
+              </div>
             </div>
           )}
         </div>
