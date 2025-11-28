@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 
 // RecipeDetail 컴포넌트
 function RecipeDetail({ recipe, onClose, language }) {
+  const [translatedText, setTranslatedText] = useState("");
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [showTranslation, setShowTranslation] = useState(false);
+
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === "Escape") onClose();
@@ -291,6 +295,37 @@ function RecipeDetail({ recipe, onClose, language }) {
     return ingredients;
   };
 
+  const translateInstructions = async () => {
+    if (showTranslation && translatedText) {
+      setShowTranslation(false);
+      return;
+    }
+
+    if (translatedText) {
+      setShowTranslation(true);
+      return;
+    }
+
+    setIsTranslating(true);
+    try {
+      const text = recipe.strInstructions;
+      const response = await fetch(
+        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ko&dt=t&q=${encodeURIComponent(
+          text
+        )}`
+      );
+      const data = await response.json();
+      const translated = data[0].map((item) => item[0]).join("");
+      setTranslatedText(translated);
+      setShowTranslation(true);
+    } catch (error) {
+      console.error("Translation error:", error);
+      alert(language === "ko" ? "번역에 실패했습니다." : "Translation failed.");
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
   const ingredients = getIngredients();
 
   return (
@@ -401,25 +436,66 @@ function RecipeDetail({ recipe, onClose, language }) {
 
             {/* Instructions Section */}
             <div className="mb-8">
-              <h3 className="flex items-center gap-2 text-xl font-bold text-gray-900 mb-4">
-                <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-wine-400 to-wine-600 flex items-center justify-center">
-                  👨‍🍳
-                </span>
-                {language === "ko" ? "조리 방법" : "Instructions"}
-              </h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="flex items-center gap-2 text-xl font-bold text-gray-900">
+                  <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-wine-400 to-wine-600 flex items-center justify-center">
+                    👨‍🍳
+                  </span>
+                  {language === "ko" ? "조리 방법" : "Instructions"}
+                </h3>
+
+                {language === "ko" && (
+                  <button
+                    onClick={translateInstructions}
+                    disabled={isTranslating}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 text-white font-medium
+                             hover:bg-blue-600 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  >
+                    {isTranslating ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        번역 중...
+                      </>
+                    ) : showTranslation ? (
+                      <>
+                        <span>🔄</span>
+                        원문 보기
+                      </>
+                    ) : (
+                      <>
+                        <span>🌐</span>
+                        한국어로 번역
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+
               <div className="p-6 rounded-2xl bg-gray-50 border border-gray-200">
                 <div className="prose prose-gray max-w-none">
-                  {recipe.strInstructions
-                    .split("\n")
-                    .filter((p) => p.trim())
-                    .map((paragraph, index) => (
-                      <p
-                        key={index}
-                        className="text-gray-700 leading-relaxed mb-4 last:mb-0"
-                      >
-                        {paragraph}
-                      </p>
-                    ))}
+                  {showTranslation
+                    ? translatedText
+                        .split("\n")
+                        .filter((p) => p.trim())
+                        .map((paragraph, index) => (
+                          <p
+                            key={index}
+                            className="text-gray-700 leading-relaxed mb-4 last:mb-0"
+                          >
+                            {paragraph}
+                          </p>
+                        ))
+                    : recipe.strInstructions
+                        .split("\n")
+                        .filter((p) => p.trim())
+                        .map((paragraph, index) => (
+                          <p
+                            key={index}
+                            className="text-gray-700 leading-relaxed mb-4 last:mb-0"
+                          >
+                            {paragraph}
+                          </p>
+                        ))}
                 </div>
               </div>
             </div>
