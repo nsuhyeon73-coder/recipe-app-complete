@@ -7,6 +7,16 @@ function Hero({ onRandomClick, language }) {
     setIsVisible(true);
   }, []);
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    console.log("Button clicked!"); // 디버깅용
+    if (onRandomClick && typeof onRandomClick === "function") {
+      onRandomClick();
+    } else {
+      console.error("onRandomClick is not a function");
+    }
+  };
+
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden hero-pattern pt-20">
       {/* Animated Background Elements */}
@@ -127,11 +137,13 @@ function Hero({ onRandomClick, language }) {
                      }`}
         >
           <button
-            onClick={onRandomClick}
+            onClick={handleClick}
+            type="button"
             className="group px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 
                      text-white font-bold rounded-full text-lg
                      hover:from-gold-400 hover:to-gold-500 transition-all
-                     shadow-xl shadow-gold-500/30 btn-shine flex items-center justify-center gap-2"
+                     shadow-xl shadow-gold-500/30 btn-shine flex items-center justify-center gap-2
+                     cursor-pointer"
           >
             <span className="text-2xl">🎲</span>
             {language === "ko" ? "랜덤 레시피 추천받기" : "Get Random Recipe"}

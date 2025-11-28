@@ -57,13 +57,6 @@ function RecipeGrid({
           </div>
         </div>
 
-        {/* Category Filter Skeleton */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {[...Array(8)].map((_, i) => (
-            <div key={i} className="h-10 w-24 rounded-full skeleton"></div>
-          ))}
-        </div>
-
         {/* Grid Skeleton */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[...Array(12)].map((_, index) => (
@@ -115,35 +108,6 @@ function RecipeGrid({
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-      {/* Category Filter */}
-      <div className="flex flex-wrap justify-center gap-3 mb-12">
-        <button
-          onClick={onRandom}
-          className={`px-5 py-2.5 rounded-full font-medium text-sm transition-all duration-300 flex items-center gap-2
-                    ${
-                      !activeCategory && !searchQuery
-                        ? "bg-gradient-to-r from-gold-500 to-gold-600 text-white shadow-lg shadow-gold-500/25"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200"
-                    }`}
-        >
-          <span>🎲</span> {language === "ko" ? "전체" : "All"}
-        </button>
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => onCategoryClick(category.id)}
-            className={`px-5 py-2.5 rounded-full font-medium text-sm transition-all duration-300 flex items-center gap-2
-                      ${
-                        activeCategory === category.id
-                          ? "bg-gradient-to-r from-gold-500 to-gold-600 text-white shadow-lg shadow-gold-500/25"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200"
-                      }`}
-          >
-            <span>{category.emoji}</span> {category.label}
-          </button>
-        ))}
-      </div>
-
       {/* Section Title */}
       <div className="text-center mb-10">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
