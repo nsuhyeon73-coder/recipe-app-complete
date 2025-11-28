@@ -7,30 +7,27 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // 룰렛 섹션 정의 (12시부터 시계방향)
   const cuisines = [
     {
-      id: "korean",
       name: language === "ko" ? "한식" : "Korean",
       color: "#FFB6C1",
-      area: "Korean", // TheMealDB API area 값
+      area: "Korean",
     },
     {
-      id: "western",
       name: language === "ko" ? "양식" : "Western",
       color: "#FFE66D",
-      area: "American", // 양식 = American
+      area: "American",
     },
     {
-      id: "chinese",
       name: language === "ko" ? "중식" : "Chinese",
       color: "#87CEEB",
-      area: "Chinese", // 중식 = Chinese
+      area: "Chinese",
     },
     {
-      id: "japanese",
       name: language === "ko" ? "일식" : "Japanese",
       color: "#98D8C8",
-      area: "Japanese", // 일식 = Japanese
+      area: "Japanese",
     },
   ];
 
@@ -43,41 +40,42 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
 
   const fetchRandomRecipe = async (area) => {
     setLoading(true);
-    console.log("Fetching recipe for area:", area); // 디버깅용
+    console.log("========================================");
+    console.log("🔍 검색할 지역:", area);
 
     try {
-      // 해당 지역의 레시피 가져오기
       const response = await fetch(
         `https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`
       );
       const data = await response.json();
-      console.log("API Response:", data); // 디버깅용
+      console.log("📦 받은 레시피 개수:", data.meals ? data.meals.length : 0);
 
       if (data.meals && data.meals.length > 0) {
-        // 랜덤하게 하나 선택
         const randomMeal =
           data.meals[Math.floor(Math.random() * data.meals.length)];
-        console.log("Selected meal:", randomMeal); // 디버깅용
+        console.log("✅ 선택된 레시피 ID:", randomMeal.idMeal);
 
-        // 상세 정보 가져오기
         const detailResponse = await fetch(
           `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${randomMeal.idMeal}`
         );
         const detailData = await detailResponse.json();
 
         if (detailData.meals) {
-          setSelectedRecipe(detailData.meals[0]);
+          const recipe = detailData.meals[0];
+          console.log("📝 레시피 이름:", recipe.strMeal);
+          console.log("🌍 레시피 지역:", recipe.strArea);
+          console.log("========================================");
+
+          setSelectedRecipe(recipe);
           setLoading(false);
 
-          // 2초 후 레시피 상세 모달 열기
           setTimeout(() => {
-            onSelectRecipe(detailData.meals[0].idMeal);
+            onSelectRecipe(recipe.idMeal);
             onClose();
           }, 2500);
         }
       } else {
-        console.log("No meals found for area:", area); // 디버깅용
-        // 해당 지역에 레시피가 없으면 랜덤 레시피
+        console.log("❌ 해당 지역 레시피 없음, 랜덤으로 대체");
         const fallbackResponse = await fetch(
           "https://www.themealdb.com/api/json/v1/1/random.php"
         );
@@ -94,7 +92,7 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
         }
       }
     } catch (error) {
-      console.error("Error fetching recipe:", error);
+      console.error("❌ 에러:", error);
       setLoading(false);
     }
   };
@@ -103,24 +101,47 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
     if (isSpinning) return;
 
     setIsSpinning(true);
-    const spins = 5 + Math.random() * 3; // 5-8바퀴
-    const extraDegrees = Math.floor(Math.random() * 360);
-    const totalRotation = rotation + spins * 360 + extraDegrees;
 
-    setRotation(totalRotation);
+    // 5-8바퀴 랜덤 회전
+    const minSpins = 5;
+    const maxSpins = 8;
+    const spins = minSpins + Math.random() * (maxSpins - minSpins);
+
+    // 0-3 중 하나 선택 (4개 섹션)
+    const targetIndex = Math.floor(Math.random() * 4);
+
+    // 각 섹션의 중앙 각도
+    // 인덱스 0(한식): 45도
+    // 인덱스 1(양식): 135도
+    // 인덱스 2(중식): 225도
+    // 인덱스 3(일식): 315도
+    const targetAngle = 45 + targetIndex * 90;
+
+    // 화살표가 12시 방향에 고정되어 있으므로
+    // 룰렛을 회전시켜서 선택된 섹션이 12시에 오도록
+    // 12시 = 0도이므로, targetAngle만큼 더 회전해야 함
+    const finalRotation = spins * 360 + (360 - targetAngle);
+
+    console.log("========================================");
+    console.log("🎲 목표 인덱스:", targetIndex);
+    console.log("🎯 목표 각도:", targetAngle);
+    console.log("🔄 총 회전 각도:", finalRotation);
+    console.log("🍽️ 선택될 요리:", cuisines[targetIndex].name);
+    console.log("🌍 검색할 지역:", cuisines[targetIndex].area);
+
+    setRotation(finalRotation);
 
     setTimeout(() => {
-      const normalizedRotation = totalRotation % 360;
-      const adjustedRotation = (normalizedRotation + 45) % 360; // 45도 조정
-      const selectedIndex = Math.floor(adjustedRotation / 90);
-      const selected = cuisines[selectedIndex % cuisines.length];
+      const selected = cuisines[targetIndex];
+      console.log("✨ 최종 선택:", selected.name, `(${selected.area})`);
 
-      console.log("Selected cuisine:", selected); // 디버깅용
       setSelectedCuisine(selected);
       setIsSpinning(false);
 
-      // 선택된 요리 종류의 랜덤 레시피 가져오기
-      fetchRandomRecipe(selected.area); // area 사용
+      // 선택된 요리의 레시피 가져오기
+      setTimeout(() => {
+        fetchRandomRecipe(selected.area);
+      }, 500);
     }, 3000);
   };
 
@@ -187,6 +208,11 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
                     className="w-full h-full rounded-full border-8 border-gray-800 shadow-2xl"
                   >
                     {cuisines.map((cuisine, index) => {
+                      // 각 섹션: 90도씩
+                      // index 0: 0-90도 (12시-3시) = 한식
+                      // index 1: 90-180도 (3시-6시) = 양식
+                      // index 2: 180-270도 (6시-9시) = 중식
+                      // index 3: 270-360도 (9시-12시) = 일식
                       const startAngle = (index * 90 - 90) * (Math.PI / 180);
                       const endAngle =
                         ((index + 1) * 90 - 90) * (Math.PI / 180);
@@ -198,13 +224,14 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
 
                       const pathData = `M 50 50 L ${x1} ${y1} A 50 50 0 0 1 ${x2} ${y2} Z`;
 
-                      // 텍스트 위치 계산 (각 섹션의 중앙)
-                      const textAngle = startAngle + Math.PI / 4;
+                      // 텍스트 위치 (섹션 중앙)
+                      const textAngle =
+                        (index * 90 + 45 - 90) * (Math.PI / 180);
                       const textX = 50 + 30 * Math.cos(textAngle);
                       const textY = 50 + 30 * Math.sin(textAngle);
 
                       return (
-                        <g key={cuisine.id}>
+                        <g key={index}>
                           <path
                             d={pathData}
                             fill={cuisine.color}
@@ -220,7 +247,7 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
                             fontSize="8"
                             fontWeight="bold"
                             transform={`rotate(${
-                              index * 90
+                              index * 90 + 45
                             }, ${textX}, ${textY})`}
                           >
                             {cuisine.name}
@@ -231,9 +258,9 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
                   </svg>
                 </div>
 
-                {/* Arrow - Fixed at top */}
+                {/* Arrow - Fixed at top (12시 방향) */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-4 z-20 pointer-events-none">
-                  <div className="w-0 h-0 border-l-[25px] border-l-transparent border-r-[25px] border-r-transparent border-t-[40px] border-t-gray-800 drop-shadow-lg"></div>
+                  <div className="w-0 h-0 border-l-[25px] border-l-transparent border-r-[25px] border-r-transparent border-t-[40px] border-t-red-600 drop-shadow-lg"></div>
                 </div>
 
                 {/* Center Dot */}
@@ -266,6 +293,9 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
                   <p className="text-green-800 font-bold text-xl">
                     🎉 {selectedCuisine.name}{" "}
                     {language === "ko" ? "선택!" : "Selected!"}
+                  </p>
+                  <p className="text-green-600 text-sm mt-1">
+                    API: {selectedCuisine.area}
                   </p>
                 </div>
               )}
@@ -306,14 +336,12 @@ function RouletteModal({ onClose, onSelectRecipe, language }) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <div className="inline-block px-4 py-2 rounded-full bg-gold-500 text-white font-bold mb-3">
-                    {selectedCuisine?.name}
+                    {selectedCuisine?.name} • {selectedRecipe.strArea}
                   </div>
                   <h3 className="text-3xl font-bold text-white mb-2">
                     {selectedRecipe.strMeal}
                   </h3>
-                  <p className="text-white/80">
-                    {selectedRecipe.strCategory} • {selectedRecipe.strArea}
-                  </p>
+                  <p className="text-white/80">{selectedRecipe.strCategory}</p>
                 </div>
               </div>
 
