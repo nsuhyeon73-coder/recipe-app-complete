@@ -5,54 +5,83 @@ function FeaturedSections({ language, onRecipeClick }) {
   const [specialRecipes, setSpecialRecipes] = useState([]);
   const [monthlyRecipes, setMonthlyRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentSetIndex, setCurrentSetIndex] = useState(0);
+  const [currentRecipeIndex, setCurrentRecipeIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // 2개의 세트, 각 6개씩 - 총 12개의 완전히 다른 레시피
+  // 12개의 레시피 (각 기념일마다 2개씩)
   const allSpecialSearches = [
-    [
-      {
-        name: language === "ko" ? "생일" : "Birthday",
-        search: "victoria sponge",
-      },
-      {
-        name: language === "ko" ? "크리스마스" : "Christmas",
-        search: "christmas cake",
-      },
-      {
-        name: language === "ko" ? "추수감사절" : "Thanksgiving",
-        search: "turkey",
-      },
-      {
-        name: language === "ko" ? "발렌타인데이" : "Valentine's Day",
-        search: "chocolate brownies",
-      },
-      {
-        name: language === "ko" ? "할로윈" : "Halloween",
-        search: "pumpkin pie",
-      },
-      { name: language === "ko" ? "신년" : "New Year", search: "trifle" },
-    ],
-    [
-      { name: language === "ko" ? "생일" : "Birthday", search: "carrot cake" },
-      {
-        name: language === "ko" ? "크리스마스" : "Christmas",
-        search: "mince pies",
-      },
-      {
-        name: language === "ko" ? "추수감사절" : "Thanksgiving",
-        search: "sweet potato",
-      },
-      {
-        name: language === "ko" ? "발렌타인데이" : "Valentine's Day",
-        search: "white chocolate",
-      },
-      {
-        name: language === "ko" ? "할로윈" : "Halloween",
-        search: "apple frangipan",
-      },
-      { name: language === "ko" ? "신년" : "New Year", search: "dundee cake" },
-    ],
+    // 생일 1
+    {
+      name: language === "ko" ? "생일" : "Birthday",
+      search: "victoria sponge",
+      position: 0,
+    },
+    // 생일 2
+    {
+      name: language === "ko" ? "생일" : "Birthday",
+      search: "carrot cake",
+      position: 0,
+    },
+    // 크리스마스 1
+    {
+      name: language === "ko" ? "크리스마스" : "Christmas",
+      search: "christmas cake",
+      position: 1,
+    },
+    // 크리스마스 2
+    {
+      name: language === "ko" ? "크리스마스" : "Christmas",
+      search: "mince pies",
+      position: 1,
+    },
+    // 추수감사절 1
+    {
+      name: language === "ko" ? "추수감사절" : "Thanksgiving",
+      search: "turkey",
+      position: 2,
+    },
+    // 추수감사절 2
+    {
+      name: language === "ko" ? "추수감사절" : "Thanksgiving",
+      search: "sweet potato",
+      position: 2,
+    },
+    // 발렌타인데이 1
+    {
+      name: language === "ko" ? "발렌타인데이" : "Valentine's Day",
+      search: "chocolate brownies",
+      position: 3,
+    },
+    // 발렌타인데이 2
+    {
+      name: language === "ko" ? "발렌타인데이" : "Valentine's Day",
+      search: "white chocolate",
+      position: 3,
+    },
+    // 할로윈 1
+    {
+      name: language === "ko" ? "할로윈" : "Halloween",
+      search: "pumpkin pie",
+      position: 4,
+    },
+    // 할로윈 2
+    {
+      name: language === "ko" ? "할로윈" : "Halloween",
+      search: "apple frangipan",
+      position: 4,
+    },
+    // 신년 1
+    {
+      name: language === "ko" ? "신년" : "New Year",
+      search: "trifle",
+      position: 5,
+    },
+    // 신년 2
+    {
+      name: language === "ko" ? "신년" : "New Year",
+      search: "dundee cake",
+      position: 5,
+    },
   ];
 
   // 이달의 추천 메뉴 (고정)
@@ -76,21 +105,17 @@ function FeaturedSections({ language, onRecipeClick }) {
   ];
 
   useEffect(() => {
-    fetchFeaturedRecipes(0);
+    fetchAllRecipes();
     fetchMonthlyRecipes();
   }, []);
 
-  // 3초마다 기념일 레시피 자동 회전 - 부드러운 전환
+  // 3초마다 한 레시피씩 교체
   useEffect(() => {
     const interval = setInterval(() => {
       setIsTransitioning(true);
 
       setTimeout(() => {
-        setCurrentSetIndex((prevIndex) => {
-          const nextIndex = (prevIndex + 1) % allSpecialSearches.length;
-          fetchSpecialRecipes(nextIndex);
-          return nextIndex;
-        });
+        setCurrentRecipeIndex((prev) => (prev + 1) % 12);
 
         setTimeout(() => {
           setIsTransitioning(false);
@@ -101,23 +126,11 @@ function FeaturedSections({ language, onRecipeClick }) {
     return () => clearInterval(interval);
   }, []);
 
-  const fetchFeaturedRecipes = async (setIndex) => {
+  const fetchAllRecipes = async () => {
     setLoading(true);
     try {
-      await Promise.all([fetchSpecialRecipes(setIndex), fetchMonthlyRecipes()]);
-    } catch (error) {
-      console.error("Featured recipes fetch error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchSpecialRecipes = async (setIndex) => {
-    try {
-      const currentSpecialSearches = allSpecialSearches[setIndex];
       const loadedRecipeIds = new Set();
-
-      const specialPromises = currentSpecialSearches.map(async (occasion) => {
+      const recipePromises = allSpecialSearches.map(async (occasion) => {
         try {
           const response = await fetch(
             `https://www.themealdb.com/api/json/v1/1/search.php?s=${occasion.search}`
@@ -125,11 +138,14 @@ function FeaturedSections({ language, onRecipeClick }) {
           const data = await response.json();
 
           if (data.meals && data.meals.length > 0) {
-            // 중복되지 않은 첫 번째 레시피 찾기
             for (let meal of data.meals) {
               if (!loadedRecipeIds.has(meal.idMeal)) {
                 loadedRecipeIds.add(meal.idMeal);
-                return { ...meal, occasion: occasion.name };
+                return {
+                  ...meal,
+                  occasion: occasion.name,
+                  position: occasion.position,
+                };
               }
             }
           }
@@ -139,54 +155,14 @@ function FeaturedSections({ language, onRecipeClick }) {
         }
       });
 
-      const specialResults = await Promise.all(specialPromises);
-      let validResults = specialResults.filter((recipe) => recipe !== null);
+      const results = await Promise.all(recipePromises);
+      const validResults = results.filter((recipe) => recipe !== null);
 
-      // 6개가 안되면 추가로 검색
-      if (validResults.length < 6) {
-        const fallbackSearches = [
-          "cheesecake",
-          "tiramisu",
-          "banoffee",
-          "eton mess",
-          "scones",
-          "madeira cake",
-        ];
-
-        for (
-          let i = 0;
-          i < fallbackSearches.length && validResults.length < 6;
-          i++
-        ) {
-          try {
-            const response = await fetch(
-              `https://www.themealdb.com/api/json/v1/1/search.php?s=${fallbackSearches[i]}`
-            );
-            const data = await response.json();
-
-            if (data.meals && data.meals.length > 0) {
-              for (let meal of data.meals) {
-                if (!loadedRecipeIds.has(meal.idMeal)) {
-                  loadedRecipeIds.add(meal.idMeal);
-                  validResults.push({
-                    ...meal,
-                    occasion:
-                      currentSpecialSearches[validResults.length]?.name ||
-                      "Special",
-                  });
-                  break;
-                }
-              }
-            }
-          } catch (error) {
-            console.error("Fallback search error:", error);
-          }
-        }
-      }
-
-      setSpecialRecipes(validResults.slice(0, 6));
+      setSpecialRecipes(validResults);
     } catch (error) {
       console.error("Special recipes fetch error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -226,6 +202,29 @@ function FeaturedSections({ language, onRecipeClick }) {
       window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
   };
+
+  // 현재 표시할 6개 레시피 계산
+  const getDisplayRecipes = () => {
+    if (specialRecipes.length === 0) return [];
+
+    const displayRecipes = [];
+    const positions = [0, 1, 2, 3, 4, 5];
+
+    for (let pos of positions) {
+      // 각 포지션에서 currentRecipeIndex가 짝수면 첫번째, 홀수면 두번째
+      const recipesAtPosition = specialRecipes.filter(
+        (r) => r.position === pos
+      );
+      if (recipesAtPosition.length > 0) {
+        const index = currentRecipeIndex % 2;
+        displayRecipes.push(recipesAtPosition[index] || recipesAtPosition[0]);
+      }
+    }
+
+    return displayRecipes;
+  };
+
+  const displayRecipes = getDisplayRecipes();
 
   if (loading && specialRecipes.length === 0) {
     return (
@@ -316,9 +315,9 @@ function FeaturedSections({ language, onRecipeClick }) {
               isTransitioning ? "opacity-0" : "opacity-100"
             }`}
           >
-            {specialRecipes.map((recipe, index) => (
+            {displayRecipes.map((recipe, index) => (
               <div
-                key={`${recipe.idMeal}-${currentSetIndex}-${index}`}
+                key={`${recipe.idMeal}-${currentRecipeIndex}-${index}`}
                 onClick={() => onRecipeClick(recipe.idMeal)}
                 className="group relative rounded-2xl overflow-hidden bg-white border border-gray-200 hover:border-gold-500/50 cursor-pointer card-hover shadow-sm hover:shadow-xl"
               >
