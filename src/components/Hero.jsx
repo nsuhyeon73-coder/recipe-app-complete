@@ -1,0 +1,188 @@
+import { useEffect, useState } from "react";
+
+function Hero({ onRandomClick, language }) {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
+  return (
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden hero-pattern pt-20">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gold-500/10 rounded-full blur-3xl animate-float"></div>
+        <div
+          className="absolute bottom-20 right-10 w-96 h-96 bg-wine-500/10 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: "-3s" }}
+        ></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-br from-gold-500/5 to-wine-500/5 rounded-full blur-3xl"></div>
+      </div>
+
+      {/* Decorative Food Icons */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <span
+          className="absolute top-[15%] left-[10%] text-6xl opacity-20 animate-float"
+          style={{ animationDelay: "0s" }}
+        >
+          🍕
+        </span>
+        <span
+          className="absolute top-[25%] right-[15%] text-5xl opacity-20 animate-float"
+          style={{ animationDelay: "-1s" }}
+        >
+          🍜
+        </span>
+        <span
+          className="absolute bottom-[30%] left-[20%] text-5xl opacity-20 animate-float"
+          style={{ animationDelay: "-2s" }}
+        >
+          🥘
+        </span>
+        <span
+          className="absolute bottom-[20%] right-[10%] text-6xl opacity-20 animate-float"
+          style={{ animationDelay: "-4s" }}
+        >
+          🍰
+        </span>
+        <span
+          className="absolute top-[40%] left-[5%] text-4xl opacity-15 animate-float"
+          style={{ animationDelay: "-1.5s" }}
+        >
+          🥗
+        </span>
+        <span
+          className="absolute top-[60%] right-[5%] text-4xl opacity-15 animate-float"
+          style={{ animationDelay: "-3.5s" }}
+        >
+          🍣
+        </span>
+      </div>
+
+      <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+        {/* Badge */}
+        <div
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 mb-6
+                     transition-all duration-700 ${
+                       isVisible
+                         ? "opacity-100 translate-y-0"
+                         : "opacity-0 translate-y-10"
+                     }`}
+        >
+          <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
+          <span className="text-gold-600 text-sm font-medium">
+            {language === "ko"
+              ? "전 세계 맛있는 레시피를 만나보세요"
+              : "Discover Delicious Recipes from Around the World"}
+          </span>
+        </div>
+
+        {/* Main Heading */}
+        <h1
+          className={`text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6
+                     transition-all duration-700 delay-100 ${
+                       isVisible
+                         ? "opacity-100 translate-y-0"
+                         : "opacity-0 translate-y-10"
+                     }`}
+        >
+          <span className="text-gray-900">
+            {language === "ko" ? "오늘 뭐 먹지?" : "What to Cook Today?"}
+          </span>
+          <br />
+          <span className="gradient-text font-display">Recipe Cook</span>
+        </h1>
+
+        {/* Description */}
+        <p
+          className={`text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed
+                     transition-all duration-700 delay-200 ${
+                       isVisible
+                         ? "opacity-100 translate-y-0"
+                         : "opacity-0 translate-y-10"
+                     }`}
+        >
+          {language === "ko" ? (
+            <>
+              랜덤 레시피로 새로운 요리에 도전하거나,
+              <br className="hidden sm:block" />
+              원하는 재료로 완벽한 레시피를 찾아보세요!
+            </>
+          ) : (
+            <>
+              Challenge yourself with random recipes or
+              <br className="hidden sm:block" />
+              find the perfect recipe with your ingredients!
+            </>
+          )}
+        </p>
+
+        {/* CTA Button */}
+        <div
+          className={`flex flex-col sm:flex-row gap-4 justify-center
+                     transition-all duration-700 delay-300 ${
+                       isVisible
+                         ? "opacity-100 translate-y-0"
+                         : "opacity-0 translate-y-10"
+                     }`}
+        >
+          <button
+            onClick={onRandomClick}
+            className="group px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 
+                     text-white font-bold rounded-full text-lg
+                     hover:from-gold-400 hover:to-gold-500 transition-all
+                     shadow-xl shadow-gold-500/30 btn-shine flex items-center justify-center gap-2"
+          >
+            <span className="text-2xl">🎲</span>
+            {language === "ko" ? "랜덤 레시피 추천받기" : "Get Random Recipe"}
+            <span className="inline-block group-hover:translate-x-1 transition-transform">
+              →
+            </span>
+          </button>
+
+          <a
+            href="#recipes"
+            className="px-8 py-4 border-2 border-gold-500/30 text-gold-600 
+                     font-semibold rounded-full text-lg
+                     hover:border-gold-500 hover:bg-gold-500/10 transition-all
+                     flex items-center justify-center gap-2"
+          >
+            <span className="text-xl">🔍</span>
+            {language === "ko" ? "레시피 둘러보기" : "Browse Recipes"}
+          </a>
+        </div>
+
+        {/* Stats */}
+        <div
+          className={`grid grid-cols-3 gap-6 mt-12 max-w-lg mx-auto
+                     transition-all duration-700 delay-400 ${
+                       isVisible
+                         ? "opacity-100 translate-y-0"
+                         : "opacity-0 translate-y-10"
+                     }`}
+        >
+          {[
+            { number: "300+", label: language === "ko" ? "레시피" : "Recipes" },
+            {
+              number: "50+",
+              label: language === "ko" ? "카테고리" : "Categories",
+            },
+            {
+              number: "150+",
+              label: language === "ko" ? "국가별 요리" : "Cuisines",
+            },
+          ].map((stat, index) => (
+            <div key={stat.label} className="text-center">
+              <div className="text-2xl sm:text-3xl font-bold text-gray-900">
+                {stat.number}
+              </div>
+              <div className="text-sm text-gray-600">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default Hero;
