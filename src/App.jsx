@@ -5,11 +5,10 @@ import FeaturedSections from "./components/FeaturedSections";
 import SearchBar from "./components/SearchBar";
 import RecipeGrid from "./components/RecipeGrid";
 import RecipeDetail from "./components/RecipeDetail";
-import Testimonials from "./components/Testimonials";
+import Testimonials from "./components/Reviews";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import CategoryPage from "./components/CategoryPage";
-import RouletteModal from "./components/RouletteModal";
 
 function App() {
   const [recipes, setRecipes] = useState([]);
@@ -22,8 +21,6 @@ function App() {
   const [language, setLanguage] = useState("ko");
   const [currentPage, setCurrentPage] = useState("home");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [showRoulette, setShowRoulette] = useState(false);
-
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 100);
@@ -138,14 +135,24 @@ function App() {
     }
   };
 
-  const handleOpenRoulette = () => {
-    console.log("Opening roulette modal"); // 디버깅용
-    setShowRoulette(true);
-  };
-
-  const handleCloseRoulette = () => {
-    console.log("Closing roulette modal"); // 디버깅용
-    setShowRoulette(false);
+  const handleOpenRoulette = async () => {
+    console.log("🎲 랜덤 레시피 버튼 클릭됨!");
+    try {
+      console.log("API 호출 시작...");
+      const response = await fetch(
+        "https://www.themealdb.com/api/json/v1/1/random.php"
+      );
+      const data = await response.json();
+      console.log("받은 데이터:", data);
+      if (data.meals && data.meals[0]) {
+        console.log("레시피 설정:", data.meals[0].strMeal);
+        setSelectedRecipe(data.meals[0]);
+      } else {
+        console.error("레시피 데이터가 없습니다");
+      }
+    } catch (error) {
+      console.error("랜덤 레시피를 불러오는데 실패했습니다:", error);
+    }
   };
 
   useEffect(() => {
@@ -210,14 +217,6 @@ function App() {
         <RecipeDetail
           recipe={selectedRecipe}
           onClose={() => setSelectedRecipe(null)}
-          language={language}
-        />
-      )}
-
-      {showRoulette && (
-        <RouletteModal
-          onClose={handleCloseRoulette}
-          onSelectRecipe={fetchRecipeDetail}
           language={language}
         />
       )}

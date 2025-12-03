@@ -18,25 +18,6 @@ function RecipeCard({ recipe, onClick, index, language }) {
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
 
-        {/* Category Badge */}
-        <div
-          className="absolute top-3 right-3 px-3 py-1.5 rounded-full 
-                      bg-gradient-to-r from-gold-500 to-gold-600 text-white text-xs font-bold
-                      shadow-lg"
-        >
-          {recipe.strCategory}
-        </div>
-
-        {/* Area Badge */}
-        {recipe.strArea && (
-          <div
-            className="absolute top-3 left-3 px-3 py-1.5 rounded-full glass text-gray-900 text-xs font-medium
-                        border border-white/20 bg-white/90"
-          >
-            🌍 {recipe.strArea}
-          </div>
-        )}
-
         {/* Hover Overlay */}
         <div className="absolute inset-0 bg-gold-500/0 group-hover:bg-gold-500/10 transition-colors duration-300"></div>
 

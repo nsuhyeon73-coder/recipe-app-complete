@@ -5,7 +5,13 @@ import ScrollToTop from "./ScrollToTop";
 import RecipeCard from "./RecipeCard";
 import RecipeDetail from "./RecipeDetail";
 
-function CategoryPage({ category, language, onLanguageChange, onBack, onCategoryChange }) {
+function CategoryPage({
+  category,
+  language,
+  onLanguageChange,
+  onBack,
+  onCategoryChange,
+}) {
   const [recipes, setRecipes] = useState([]);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -62,7 +68,7 @@ function CategoryPage({ category, language, onLanguageChange, onBack, onCategory
 
       if (data.meals) {
         const meals = data.meals.slice(0, 12);
-        
+
         const detailPromises = meals.map((meal) =>
           fetch(
             `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${meal.idMeal}`
@@ -118,13 +124,6 @@ function CategoryPage({ category, language, onLanguageChange, onBack, onCategory
       <section className="relative min-h-[40vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-gold-50 to-wine-50 pt-20">
         <div className="absolute inset-0 hero-pattern"></div>
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center py-16">
-
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 mb-6">
-            <span className="text-gold-600 text-sm font-medium">
-              {language === "ko" ? "카테고리" : "Category"}
-            </span>
-          </div>
-
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
             <span className="gradient-text">
               {categoryNames[language][category] || category}

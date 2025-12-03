@@ -11,32 +11,27 @@ function Header({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const categories = [
-    { id: "Beef", label: language === "ko" ? "소고기" : "Beef", emoji: "🥩" },
+    { id: "Beef", label: language === "ko" ? "소고기" : "Beef" },
     {
       id: "Chicken",
       label: language === "ko" ? "치킨" : "Chicken",
-      emoji: "🍗",
     },
     {
       id: "Seafood",
       label: language === "ko" ? "해산물" : "Seafood",
-      emoji: "🦐",
     },
-    { id: "Pasta", label: language === "ko" ? "파스타" : "Pasta", emoji: "🍝" },
+    { id: "Pasta", label: language === "ko" ? "파스타" : "Pasta" },
     {
       id: "Dessert",
       label: language === "ko" ? "디저트" : "Dessert",
-      emoji: "🍰",
     },
     {
       id: "Vegetarian",
       label: language === "ko" ? "채식" : "Vegetarian",
-      emoji: "🥗",
     },
     {
       id: "Breakfast",
       label: language === "ko" ? "아침" : "Breakfast",
-      emoji: "🍳",
     },
     { id: "Pork", label: language === "ko" ? "돼지고기" : "Pork", emoji: "🥓" },
     { id: "Lamb", label: language === "ko" ? "양고기" : "Lamb", emoji: "🍖" },
@@ -90,15 +85,18 @@ function Header({
               <button
                 key={category.id}
                 onClick={() => onCategoryClick(category.id)}
-                className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-300
+                className={`px-4 py-2 text-sm font-medium transition-all duration-300 relative
                           ${
                             activeCategory === category.id
-                              ? "bg-gold-500/20 text-gold-600 border border-gold-500/30"
-                              : "text-gray-700 hover:text-gold-600 hover:bg-gray-100"
+                              ? "text-gold-600"
+                              : "text-gray-700 hover:text-gold-600"
                           }`}
               >
                 <span className="mr-1">{category.emoji}</span>
                 {category.label}
+                {activeCategory === category.id && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold-600"></div>
+                )}
               </button>
             ))}
 
@@ -172,15 +170,18 @@ function Header({
                   onCategoryClick(category.id);
                   setIsMenuOpen(false);
                 }}
-                className={`px-4 py-3 text-left rounded-xl transition-all font-medium flex items-center gap-2
+                className={`px-4 py-3 text-left rounded-xl transition-all font-medium flex items-center gap-2 relative
                           ${
                             activeCategory === category.id
-                              ? "bg-gold-500/20 text-gold-600 border border-gold-500/30"
-                              : "text-gray-700 hover:text-gold-600 hover:bg-gray-100 border border-transparent"
+                              ? "text-gold-600"
+                              : "text-gray-700 hover:text-gold-600"
                           }`}
               >
                 <span className="text-xl">{category.emoji}</span>
                 {category.label}
+                {activeCategory === category.id && (
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold-600"></div>
+                )}
               </button>
             ))}
           </div>
