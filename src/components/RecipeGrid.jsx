@@ -152,20 +152,6 @@ function RecipeGrid({
           />
         ))}
       </div>
-
-      {/* Load More / Random Button */}
-      <div className="text-center mt-12">
-        <button
-          onClick={onRandom}
-          className="px-8 py-4 bg-gray-100 text-gray-700 font-semibold rounded-full
-                   hover:bg-gold-500/20 hover:text-gold-600 transition-all
-                   border border-gray-200 hover:border-gold-500/30
-                   flex items-center gap-2 mx-auto"
-        >
-          <span className="text-xl">🔄</span>
-          {language === "ko" ? "새로운 레시피 보기" : "View New Recipes"}
-        </button>
-      </div>
     </section>
   );
 }
