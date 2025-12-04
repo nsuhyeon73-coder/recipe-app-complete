@@ -9,6 +9,7 @@ import Testimonials from "./components/Reviews";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import CategoryPage from "./components/CategoryPage";
+import recipeAPI from "./utils/api";
 
 function App() {
   const [recipes, setRecipes] = useState([]);
@@ -21,6 +22,7 @@ function App() {
   const [language, setLanguage] = useState("ko");
   const [currentPage, setCurrentPage] = useState("home");
   const [selectedCategory, setSelectedCategory] = useState("");
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 100);
@@ -35,15 +37,7 @@ function App() {
     setActiveCategory("");
     setError(null);
     try {
-      const promises = Array.from({ length: 12 }, () =>
-        fetch("https://www.themealdb.com/api/json/v1/1/random.php")
-          .then((res) => res.json())
-          .then((data) => data.meals[0])
-          .catch(() => null)
-      );
-
-      const fetchedMeals = await Promise.all(promises);
-      const validMeals = fetchedMeals.filter((meal) => meal !== null);
+      const validMeals = await recipeAPI.getMultipleRandom(12);
 
       if (validMeals.length > 0) {
         setRecipes(validMeals);
@@ -54,12 +48,9 @@ function App() {
       console.error("레시피를 불러오는데 실패했습니다:", error);
       setError("레시피를 불러오는데 실패했습니다. 다시 시도해주세요.");
       try {
-        const response = await fetch(
-          "https://www.themealdb.com/api/json/v1/1/search.php?s=chicken"
-        );
-        const data = await response.json();
-        if (data.meals) {
-          setRecipes(data.meals.slice(0, 12));
+        const fallbackRecipes = await recipeAPI.search("chicken");
+        if (fallbackRecipes.length > 0) {
+          setRecipes(fallbackRecipes.slice(0, 12));
           setError(null);
         }
       } catch (e) {
@@ -80,15 +71,7 @@ function App() {
     setActiveCategory("");
     setError(null);
     try {
-      const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(
-          query
-        )}`
-      );
-      if (!response.ok) throw new Error("검색 실패");
-      const data = await response.json();
-
-      let filteredRecipes = data.meals || [];
+      let filteredRecipes = await recipeAPI.search(query);
 
       // Pasta 검색 시 Pasta 카테고리만 필터링
       if (query.toLowerCase() === "pasta") {
@@ -123,12 +106,9 @@ function App() {
 
   const fetchRecipeDetail = async (id) => {
     try {
-      const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`
-      );
-      const data = await response.json();
-      if (data.meals) {
-        setSelectedRecipe(data.meals[0]);
+      const recipe = await recipeAPI.getById(id);
+      if (recipe) {
+        setSelectedRecipe(recipe);
       }
     } catch (error) {
       console.error("레시피 상세 정보를 불러오는데 실패했습니다:", error);
@@ -139,14 +119,11 @@ function App() {
     console.log("🎲 랜덤 레시피 버튼 클릭됨!");
     try {
       console.log("API 호출 시작...");
-      const response = await fetch(
-        "https://www.themealdb.com/api/json/v1/1/random.php"
-      );
-      const data = await response.json();
-      console.log("받은 데이터:", data);
-      if (data.meals && data.meals[0]) {
-        console.log("레시피 설정:", data.meals[0].strMeal);
-        setSelectedRecipe(data.meals[0]);
+      const recipe = await recipeAPI.getRandom();
+      console.log("받은 데이터:", recipe);
+      if (recipe) {
+        console.log("레시피 설정:", recipe.strMeal);
+        setSelectedRecipe(recipe);
       } else {
         console.error("레시피 데이터가 없습니다");
       }

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { translateRecipeName } from "../utils/recipeTranslations";
 
 function FeaturedSections({ language, onRecipeClick }) {
   const [activeTab, setActiveTab] = useState("special");
@@ -337,7 +338,7 @@ function FeaturedSections({ language, onRecipeClick }) {
                 </div>
                 <div className="p-5">
                   <h3 className="text-lg font-bold text-gray-900 group-hover:text-gold-600 transition-colors line-clamp-2">
-                    {recipe.strMeal}
+                    {translateRecipeName(recipe.strMeal, language)}
                   </h3>
                   <p className="text-sm text-gray-600 mt-1">
                     {recipe.strCategory}
@@ -394,7 +395,8 @@ function FeaturedSections({ language, onRecipeClick }) {
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <h3 className="text-2xl font-bold text-white mb-2 line-clamp-2">
-                      {recipe.customName || recipe.strMeal}
+                      {recipe.customName ||
+                        translateRecipeName(recipe.strMeal, language)}
                     </h3>
                     <div className="flex items-center gap-2 text-white/80 text-sm">
                       <span>⭐</span>

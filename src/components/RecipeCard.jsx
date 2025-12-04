@@ -1,3 +1,5 @@
+import { translateRecipeName } from "../utils/recipeTranslations";
+
 function RecipeCard({ recipe, onClick, index, language }) {
   return (
     <div
@@ -36,7 +38,7 @@ function RecipeCard({ recipe, onClick, index, language }) {
       {/* Content */}
       <div className="p-5">
         <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-gold-600 transition-colors">
-          {recipe.strMeal}
+          {translateRecipeName(recipe.strMeal, language)}
         </h3>
 
         <div className="flex items-center justify-between">
