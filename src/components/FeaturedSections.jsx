@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { translateRecipeName } from "../utils/recipeTranslations";
 
 function FeaturedSections({ language, onRecipeClick }) {
   const [activeTab, setActiveTab] = useState("special");
@@ -9,75 +8,82 @@ function FeaturedSections({ language, onRecipeClick }) {
   const [currentRecipeIndex, setCurrentRecipeIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // 12개의 레시피 (각 기념일마다 2개씩)
+  const translateRecipeName = (name) => {
+    if (language !== "ko") return name;
+
+    const translations = {
+      "Victoria Sponge": "빅토리아 스펀지 케이크",
+      "Carrot Cake": "당근 케이크",
+      "Christmas cake": "크리스마스 케이크",
+      "Mince Pies": "민스 파이",
+      Turkey: "칠면조",
+      "Sweet Potato": "고구마",
+      "Chocolate Brownies": "초콜릿 브라우니",
+      "White chocolate": "화이트 초콜릿",
+      "Pumpkin Pie": "호박 파이",
+      Trifle: "트라이플",
+      "Dundee cake": "던디 케이크",
+    };
+
+    return translations[name] || name;
+  };
+
   const allSpecialSearches = [
-    // 생일 1
     {
       name: language === "ko" ? "생일" : "Birthday",
       search: "victoria sponge",
       position: 0,
     },
-    // 생일 2
     {
       name: language === "ko" ? "생일" : "Birthday",
       search: "carrot cake",
       position: 0,
     },
-    // 크리스마스 1
     {
       name: language === "ko" ? "크리스마스" : "Christmas",
       search: "christmas cake",
       position: 1,
     },
-    // 크리스마스 2
     {
       name: language === "ko" ? "크리스마스" : "Christmas",
       search: "mince pies",
       position: 1,
     },
-    // 추수감사절 1
     {
       name: language === "ko" ? "추수감사절" : "Thanksgiving",
       search: "turkey",
       position: 2,
     },
-    // 추수감사절 2
     {
       name: language === "ko" ? "추수감사절" : "Thanksgiving",
       search: "sweet potato",
       position: 2,
     },
-    // 발렌타인데이 1
     {
       name: language === "ko" ? "발렌타인데이" : "Valentine's Day",
       search: "chocolate brownies",
       position: 3,
     },
-    // 발렌타인데이 2
     {
       name: language === "ko" ? "발렌타인데이" : "Valentine's Day",
       search: "white chocolate",
       position: 3,
     },
-    // 할로윈 1
     {
       name: language === "ko" ? "할로윈" : "Halloween",
       search: "pumpkin pie",
       position: 4,
     },
-    // 할로윈 2
     {
       name: language === "ko" ? "할로윈" : "Halloween",
       search: "apple frangipan",
       position: 4,
     },
-    // 신년 1
     {
       name: language === "ko" ? "신년" : "New Year",
       search: "trifle",
       position: 5,
     },
-    // 신년 2
     {
       name: language === "ko" ? "신년" : "New Year",
       search: "dundee cake",
@@ -85,7 +91,6 @@ function FeaturedSections({ language, onRecipeClick }) {
     },
   ];
 
-  // 이달의 추천 메뉴 (고정)
   const monthlySearches = [
     {
       name: language === "ko" ? "스테이크 & 감자" : "Steak & Potatoes",
@@ -110,14 +115,11 @@ function FeaturedSections({ language, onRecipeClick }) {
     fetchMonthlyRecipes();
   }, []);
 
-  // 3초마다 한 레시피씩 교체
   useEffect(() => {
     const interval = setInterval(() => {
       setIsTransitioning(true);
-
       setTimeout(() => {
         setCurrentRecipeIndex((prev) => (prev + 1) % 12);
-
         setTimeout(() => {
           setIsTransitioning(false);
         }, 50);
@@ -158,7 +160,6 @@ function FeaturedSections({ language, onRecipeClick }) {
 
       const results = await Promise.all(recipePromises);
       const validResults = results.filter((recipe) => recipe !== null);
-
       setSpecialRecipes(validResults);
     } catch (error) {
       console.error("Special recipes fetch error:", error);
@@ -204,15 +205,12 @@ function FeaturedSections({ language, onRecipeClick }) {
     }
   };
 
-  // 현재 표시할 6개 레시피 계산
   const getDisplayRecipes = () => {
     if (specialRecipes.length === 0) return [];
-
     const displayRecipes = [];
     const positions = [0, 1, 2, 3, 4, 5];
 
     for (let pos of positions) {
-      // 각 포지션에서 currentRecipeIndex가 짝수면 첫번째, 홀수면 두번째
       const recipesAtPosition = specialRecipes.filter(
         (r) => r.position === pos
       );
@@ -221,7 +219,6 @@ function FeaturedSections({ language, onRecipeClick }) {
         displayRecipes.push(recipesAtPosition[index] || recipesAtPosition[0]);
       }
     }
-
     return displayRecipes;
   };
 
@@ -253,24 +250,22 @@ function FeaturedSections({ language, onRecipeClick }) {
           <div className="inline-flex gap-4 p-2 rounded-full bg-gray-100 border border-gray-200">
             <button
               onClick={() => scrollToSection("special")}
-              className={`px-8 py-3 rounded-full font-bold text-sm transition-all duration-300 flex items-center gap-2 ${
+              className={`px-8 py-3 rounded-full font-bold text-sm transition-all duration-300 ${
                 activeTab === "special"
                   ? "bg-gradient-to-r from-gold-500 to-gold-600 text-white shadow-lg shadow-gold-500/25"
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              <span className="text-xl">🎉</span>
               {language === "ko" ? "기념 요리 추천" : "Special Occasion"}
             </button>
             <button
               onClick={() => scrollToSection("monthly")}
-              className={`px-8 py-3 rounded-full font-bold text-sm transition-all duration-300 flex items-center gap-2 ${
+              className={`px-8 py-3 rounded-full font-bold text-sm transition-all duration-300 ${
                 activeTab === "monthly"
                   ? "bg-gradient-to-r from-gold-500 to-gold-600 text-white shadow-lg shadow-gold-500/25"
                   : "text-gray-600 hover:text-gray-900"
               }`}
             >
-              <span className="text-xl">⭐</span>
               {language === "ko"
                 ? "이달의 추천 메뉴"
                 : "Monthly Recommendations"}
@@ -281,7 +276,6 @@ function FeaturedSections({ language, onRecipeClick }) {
         <div id="special" className="mb-24 scroll-mt-24">
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 mb-4">
-              <span className="text-2xl">🎉</span>
               <span className="text-gold-600 font-medium">
                 {language === "ko" ? "특별한 날을 위한" : "For Special Days"}
               </span>
@@ -303,11 +297,6 @@ function FeaturedSections({ language, onRecipeClick }) {
               {language === "ko"
                 ? "소중한 순간을 더 특별하게 만들어줄 레시피"
                 : "Make your precious moments even more special"}
-            </p>
-            <p className="text-sm text-gold-600 font-semibold mt-2">
-              {language === "ko"
-                ? "💫 3초마다 자동으로 바뀝니다"
-                : "💫 Auto-rotating every 3 seconds"}
             </p>
           </div>
 
@@ -332,13 +321,10 @@ function FeaturedSections({ language, onRecipeClick }) {
                   <div className="absolute top-3 right-3 px-4 py-2 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 text-white text-sm font-bold shadow-lg">
                     {recipe.occasion}
                   </div>
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-75 group-hover:scale-100">
-                    <span className="text-2xl">👀</span>
-                  </div>
                 </div>
                 <div className="p-5">
                   <h3 className="text-lg font-bold text-gray-900 group-hover:text-gold-600 transition-colors line-clamp-2">
-                    {translateRecipeName(recipe.strMeal, language)}
+                    {translateRecipeName(recipe.strMeal)}
                   </h3>
                   <p className="text-sm text-gray-600 mt-1">
                     {recipe.strCategory}
@@ -353,7 +339,6 @@ function FeaturedSections({ language, onRecipeClick }) {
         <div id="monthly" className="scroll-mt-24">
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-wine-500/10 border border-wine-500/20 mb-4">
-              <span className="text-2xl">⭐</span>
               <span className="text-wine-600 font-medium">
                 {language === "ko" ? "매달 업데이트" : "Updated Monthly"}
               </span>
@@ -377,7 +362,7 @@ function FeaturedSections({ language, onRecipeClick }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {monthlyRecipes.map((recipe, index) => (
+            {monthlyRecipes.map((recipe) => (
               <div
                 key={recipe.idMeal}
                 onClick={() => onRecipeClick(recipe.idMeal)}
@@ -395,11 +380,9 @@ function FeaturedSections({ language, onRecipeClick }) {
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 p-6">
                     <h3 className="text-2xl font-bold text-white mb-2 line-clamp-2">
-                      {recipe.customName ||
-                        translateRecipeName(recipe.strMeal, language)}
+                      {recipe.customName || recipe.strMeal}
                     </h3>
                     <div className="flex items-center gap-2 text-white/80 text-sm">
-                      <span>⭐</span>
                       <span>
                         {language === "ko" ? "추천 메뉴" : "Recommended"}
                       </span>

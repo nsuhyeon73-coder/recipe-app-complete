@@ -20,24 +20,16 @@ function Footer({ language }) {
     <footer className="bg-gray-50 border-t border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid md:grid-cols-3 gap-12">
-          {/* Brand */}
+          {/* Brand - 이모지 완전 제거 */}
           <div>
-            <a href="#" className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-400 to-wine-600 flex items-center justify-center text-2xl">
-                🍳
-              </div>
-              <div>
-                <h3 className="text-xl font-bold gradient-text font-display">
-                  Recipe Cook
-                </h3>
-                <p className="text-xs text-gold-600/80 tracking-wider">
-                  DELICIOUS RECIPES
-                </p>
-              </div>
+            <a href="#" className="flex items-center mb-4">
+              <h3 className="text-xl font-bold gradient-text font-display">
+                Recipe Cook
+              </h3>
             </a>
             <p className="text-gray-600 text-sm leading-relaxed">
               {language === "ko"
-                ? "전 세계의 맛있는 레시피를 한 곳에서! 새로운 요리에 도전해보세요 오늘의 요리사는 여러분 입니다!"
+                ? "전 세계의 맛있는 레시피를 한 곳에서! 새로운 요리에 도전해보세요."
                 : "Delicious recipes from around the world in one place! Try new dishes today."}
             </p>
           </div>
@@ -102,11 +94,10 @@ function Footer({ language }) {
               TheMealDB
             </a>
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <span className="text-gray-500 text-sm">
-              {language === "ko" ? "제작:" : "Made with"}
+              {language === "ko" ? "제작: React" : "Made with React"}
             </span>
-            <span className="text-gray-500 text-sm">Su Hyun Noh</span>
           </div>
         </div>
       </div>

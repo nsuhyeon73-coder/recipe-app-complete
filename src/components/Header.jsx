@@ -12,27 +12,12 @@ function Header({
 
   const categories = [
     { id: "Beef", label: language === "ko" ? "소고기" : "Beef" },
-    {
-      id: "Chicken",
-      label: language === "ko" ? "치킨" : "Chicken",
-    },
-    {
-      id: "Seafood",
-      label: language === "ko" ? "해산물" : "Seafood",
-    },
+    { id: "Chicken", label: language === "ko" ? "치킨" : "Chicken" },
+    { id: "Seafood", label: language === "ko" ? "해산물" : "Seafood" },
     { id: "Pasta", label: language === "ko" ? "파스타" : "Pasta" },
-    {
-      id: "Dessert",
-      label: language === "ko" ? "디저트" : "Dessert",
-    },
-    {
-      id: "Vegetarian",
-      label: language === "ko" ? "채식" : "Vegetarian",
-    },
-    {
-      id: "Breakfast",
-      label: language === "ko" ? "아침" : "Breakfast",
-    },
+    { id: "Dessert", label: language === "ko" ? "디저트" : "Dessert" },
+    { id: "Vegetarian", label: language === "ko" ? "채식" : "Vegetarian" },
+    { id: "Breakfast", label: language === "ko" ? "아침" : "Breakfast" },
     { id: "Pork", label: language === "ko" ? "돼지고기" : "Pork" },
     { id: "Lamb", label: language === "ko" ? "양고기" : "Lamb" },
     { id: "Goat", label: language === "ko" ? "염소고기" : "Goat" },
@@ -57,24 +42,15 @@ function Header({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          {/* Logo */}
+          {/* Logo - 이모지 완전 제거 */}
           <a
             href="#"
-            className="flex items-center gap-3 group"
+            className="flex items-center group"
             onClick={handleLogoClick}
           >
-            <div className="relative">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-400 to-wine-600 flex items-center justify-center text-2xl"></div>
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gold-400 to-wine-600 blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="text-xl font-bold gradient-text font-display">
-                Recipe Cook
-              </h1>
-              <p className="text-xs text-gold-600/80 tracking-wider">
-                DELICIOUS RECIPES
-              </p>
-            </div>
+            <h1 className="text-xl font-bold gradient-text font-display">
+              Recipe Cook
+            </h1>
           </a>
 
           {/* Desktop Navigation */}
@@ -90,7 +66,6 @@ function Header({
                               : "text-gray-700 hover:text-gold-600"
                           }`}
               >
-                <span className="mr-1">{category.emoji}</span>
                 {category.label}
                 {activeCategory === category.id && (
                   <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold-600"></div>
@@ -102,12 +77,8 @@ function Header({
             <button
               onClick={() => onLanguageChange(language === "ko" ? "en" : "ko")}
               className="ml-2 px-4 py-2 text-sm font-medium rounded-full transition-all duration-300
-                       bg-gradient-to-r from-gold-500 to-gold-600 text-white hover:from-gold-400 hover:to-gold-500
-                       flex items-center gap-2"
+                       bg-gradient-to-r from-gold-500 to-gold-600 text-white hover:from-gold-400 hover:to-gold-500"
             >
-              <span className="text-base">
-                {language === "ko" ? "🇰🇷" : "🇺🇸"}
-              </span>
               {language === "ko" ? "EN" : "KO"}
             </button>
           </nav>
@@ -117,10 +88,8 @@ function Header({
             <button
               onClick={() => onLanguageChange(language === "ko" ? "en" : "ko")}
               className="px-3 py-2 text-sm font-medium rounded-full transition-all duration-300
-                       bg-gradient-to-r from-gold-500 to-gold-600 text-white
-                       flex items-center gap-1"
+                       bg-gradient-to-r from-gold-500 to-gold-600 text-white"
             >
-              <span>{language === "ko" ? "🇰🇷" : "🇺🇸"}</span>
               {language === "ko" ? "EN" : "KO"}
             </button>
 
@@ -168,14 +137,13 @@ function Header({
                   onCategoryClick(category.id);
                   setIsMenuOpen(false);
                 }}
-                className={`px-4 py-3 text-left rounded-xl transition-all font-medium flex items-center gap-2 relative
+                className={`px-4 py-3 text-left rounded-xl transition-all font-medium relative
                           ${
                             activeCategory === category.id
                               ? "text-gold-600"
                               : "text-gray-700 hover:text-gold-600"
                           }`}
               >
-                <span className="text-xl">{category.emoji}</span>
                 {category.label}
                 {activeCategory === category.id && (
                   <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gold-600"></div>
