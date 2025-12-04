@@ -33,9 +33,9 @@ function Header({
       id: "Breakfast",
       label: language === "ko" ? "아침" : "Breakfast",
     },
-    { id: "Pork", label: language === "ko" ? "돼지고기" : "Pork", emoji: "🥓" },
-    { id: "Lamb", label: language === "ko" ? "양고기" : "Lamb", emoji: "🍖" },
-    { id: "Goat", label: language === "ko" ? "염소고기" : "Goat", emoji: "🐐" },
+    { id: "Pork", label: language === "ko" ? "돼지고기" : "Pork" },
+    { id: "Lamb", label: language === "ko" ? "양고기" : "Lamb" },
+    { id: "Goat", label: language === "ko" ? "염소고기" : "Goat" },
   ];
 
   const handleLogoClick = (e) => {
@@ -64,9 +64,7 @@ function Header({
             onClick={handleLogoClick}
           >
             <div className="relative">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-400 to-wine-600 flex items-center justify-center text-2xl">
-                🍳
-              </div>
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold-400 to-wine-600 flex items-center justify-center text-2xl"></div>
               <div className="absolute inset-0 rounded-full bg-gradient-to-br from-gold-400 to-wine-600 blur-lg opacity-50 group-hover:opacity-75 transition-opacity"></div>
             </div>
             <div className="hidden sm:block">

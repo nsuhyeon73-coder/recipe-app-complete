@@ -134,7 +134,6 @@ function Reviews({ language }) {
     }
 
     if (editingReview) {
-      // 수정 모드
       const updatedUserReviews = userReviews.map((review) =>
         review.id === editingReview.id
           ? { ...newReview, image: "👤", id: editingReview.id }
@@ -150,7 +149,6 @@ function Reviews({ language }) {
       );
       setEditingReview(null);
     } else {
-      // 새 리뷰 추가
       const review = {
         ...newReview,
         image: "👤",
@@ -231,13 +229,12 @@ function Reviews({ language }) {
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 mb-4">
-            <span className="text-2xl">⭐</span>
-            <span className="text-gold-600 font-medium">
-              {language === "ko" ? "사용자 후기" : "User Reviews"}
-            </span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          {/* 테두리와 배경 제거 - 텍스트만 */}
+          <span className="text-gold-600 font-medium">
+            {language === "ko" ? "사용자 후기" : "User Reviews"}
+          </span>
+
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 mt-4">
             {language === "ko"
               ? "사용자들의 생생한 후기"
               : "Real User Testimonials"}
@@ -248,6 +245,7 @@ function Reviews({ language }) {
               : "Thousands of users are experiencing the joy of cooking with Recipe Cook"}
           </p>
 
+          {/* 버튼도 테두리 제거 - 텍스트만 */}
           <button
             onClick={() => {
               setShowReviewForm(!showReviewForm);
@@ -255,13 +253,9 @@ function Reviews({ language }) {
                 handleCancelEdit();
               }
             }}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 
-                     text-white font-bold rounded-full text-sm
-                     hover:from-gold-400 hover:to-gold-500 transition-all
-                     shadow-lg shadow-gold-500/25"
+            className="text-gold-600 font-bold text-sm hover:text-gold-700 transition-all"
           >
-            <span className="text-xl">✍️</span>
-            {language === "ko" ? "리뷰 작성하기" : "Write a Review"}
+            {language === "ko" ? "⭐ 리뷰 작성하기" : "⭐ Write a Review"}
           </button>
         </div>
 
@@ -414,17 +408,14 @@ function Reviews({ language }) {
           </div>
         </div>
 
-        {/* 전체 보기 버튼 */}
+        {/* 전체 보기 버튼 - 테두리 제거 */}
         <div className="text-center mt-8">
           <button
             onClick={() => setShowAllReviews(true)}
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-full
-                     hover:bg-gold-500/20 hover:text-gold-600 transition-all
-                     border border-gray-200 hover:border-gold-500/30"
+            className="text-gray-700 font-semibold hover:text-gold-600 transition-all"
           >
-            <span className="text-xl">📋</span>
             {language === "ko" ? "전체 리뷰 보기" : "View All Reviews"}
-            <span className="text-sm">({allTestimonials.length})</span>
+            <span className="text-sm ml-1">({allTestimonials.length})</span>
           </button>
         </div>
 
@@ -541,7 +532,7 @@ function Reviews({ language }) {
           </div>
         )}
 
-        {/* Bottom CTA */}
+        {/* Bottom CTA - 테두리 제거 */}
         <div className="text-center mt-16">
           <p className="text-gray-600 mb-4">
             {language === "ko"
@@ -549,7 +540,6 @@ function Reviews({ language }) {
               : "Become a cooking expert with Recipe Cook!"}
           </p>
           <div className="flex items-center justify-center gap-2 text-gold-600 font-semibold">
-            <span className="text-3xl">⭐</span>
             <span className="text-2xl">4.9/5.0</span>
             <span className="text-gray-500">
               {language === "ko"

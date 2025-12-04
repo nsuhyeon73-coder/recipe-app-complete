@@ -93,7 +93,6 @@ function Hero({ onRandomClick, language }) {
             type="button"
             className="group px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-bold rounded-full text-lg hover:from-gold-400 hover:to-gold-500 transition-all shadow-xl shadow-gold-500/30 btn-shine flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span className="text-2xl">🎲</span>
             {language === "ko" ? "랜덤 레시피 추천받기" : "Get Random Recipe"}
             <span className="inline-block group-hover:translate-x-1 transition-transform">
               →

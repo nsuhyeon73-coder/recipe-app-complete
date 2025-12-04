@@ -37,7 +37,7 @@ function Footer({ language }) {
             </a>
             <p className="text-gray-600 text-sm leading-relaxed">
               {language === "ko"
-                ? "전 세계의 맛있는 레시피를 한 곳에서! 새로운 요리에 도전해보세요."
+                ? "전 세계의 맛있는 레시피를 한 곳에서! 새로운 요리에 도전해보세요 오늘의 요리사는 여러분 입니다!"
                 : "Delicious recipes from around the world in one place! Try new dishes today."}
             </p>
           </div>
@@ -106,8 +106,7 @@ function Footer({ language }) {
             <span className="text-gray-500 text-sm">
               {language === "ko" ? "제작:" : "Made with"}
             </span>
-            <span className="text-red-500">❤️</span>
-            <span className="text-gray-500 text-sm">& React</span>
+            <span className="text-gray-500 text-sm">Su Hyun Noh</span>
           </div>
         </div>
       </div>

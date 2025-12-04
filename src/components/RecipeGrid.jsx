@@ -11,34 +11,29 @@ function RecipeGrid({
   language,
 }) {
   const categories = [
-    { id: "Beef", label: language === "ko" ? "소고기" : "Beef", emoji: "🥩" },
+    { id: "Beef", label: language === "ko" ? "소고기" : "Beef" },
     {
       id: "Chicken",
       label: language === "ko" ? "치킨" : "Chicken",
-      emoji: "🍗",
     },
     {
       id: "Seafood",
       label: language === "ko" ? "해산물" : "Seafood",
-      emoji: "🦐",
     },
-    { id: "Pasta", label: language === "ko" ? "파스타" : "Pasta", emoji: "🍝" },
+    { id: "Pasta", label: language === "ko" ? "파스타" : "Pasta" },
     {
       id: "Dessert",
       label: language === "ko" ? "디저트" : "Dessert",
-      emoji: "🍰",
     },
     {
       id: "Vegetarian",
       label: language === "ko" ? "채식" : "Vegetarian",
-      emoji: "🥗",
     },
     {
       id: "Breakfast",
       label: language === "ko" ? "아침" : "Breakfast",
-      emoji: "🍳",
     },
-    { id: "Pork", label: language === "ko" ? "돼지고기" : "Pork", emoji: "🥓" },
+    { id: "Pork", label: language === "ko" ? "돼지고기" : "Pork" },
   ];
 
   // Loading Skeleton
@@ -81,7 +76,6 @@ function RecipeGrid({
     return (
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         <div className="text-center py-20">
-          <div className="text-8xl mb-6">😢</div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">
             {language === "ko"
               ? "레시피를 찾을 수 없습니다"
@@ -99,7 +93,7 @@ function RecipeGrid({
                      hover:from-gold-400 hover:to-gold-500 transition-all
                      shadow-xl shadow-gold-500/30 btn-shine"
           >
-            🎲 {language === "ko" ? "랜덤 레시피 보기" : "View Random Recipes"}
+            {language === "ko" ? "랜덤 레시피 보기" : "View Random Recipes"}
           </button>
         </div>
       </section>

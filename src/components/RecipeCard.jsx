@@ -30,9 +30,7 @@ function RecipeCard({ recipe, onClick, index, language }) {
                       flex items-center justify-center
                       opacity-0 group-hover:opacity-100 transition-all duration-300 
                       transform scale-75 group-hover:scale-100"
-        >
-          <span className="text-2xl">👀</span>
-        </div>
+        ></div>
       </div>
 
       {/* Content */}
