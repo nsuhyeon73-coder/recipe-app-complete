@@ -1,4 +1,4 @@
-import { translateRecipeName } from "../utils/recipeTranslations";
+import { translateRecipeName } from "../utils/recipeTranslations.js";
 
 function RecipeCard({ recipe, onClick, index, language }) {
   return (
