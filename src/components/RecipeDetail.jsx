@@ -375,17 +375,17 @@ function RecipeDetail({ recipe, onClose, language }) {
 
             {/* Floating Info Cards */}
             <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
-              <span className="px-4 py-2 rounded-full bg-gradient-to-r from-gold-500 to-gold-600 text-white font-bold text-sm shadow-lg">
-                🍽️ {recipe.strCategory}
+              <span className="text-white font-bold text-sm">
+                {recipe.strCategory}
               </span>
               {recipe.strArea && (
-                <span className="px-4 py-2 rounded-full glass text-gray-900 font-medium text-sm border border-gray-200 bg-white/90">
-                  🌍 {recipe.strArea}
+                <span className="text-white font-medium text-sm">
+                  {recipe.strArea}
                 </span>
               )}
               {recipe.strTags && (
-                <span className="px-4 py-2 rounded-full bg-wine-500/90 text-white font-medium text-sm border border-wine-600/20">
-                  🏷️ {recipe.strTags.split(",")[0]}
+                <span className="text-white font-medium text-sm">
+                  {recipe.strTags.split(",")[0]}
                 </span>
               )}
             </div>
@@ -401,22 +401,19 @@ function RecipeDetail({ recipe, onClose, language }) {
             {/* Ingredients Section */}
             <div className="mb-8">
               <h3 className="flex items-center gap-2 text-xl font-bold text-gray-900 mb-4">
-                <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 flex items-center justify-center">
-                  📋
-                </span>
                 {language === "ko" ? "재료" : "Ingredients"}{" "}
                 <span className="text-gold-600 font-normal text-base">
                   ({ingredients.length}
                   {language === "ko" ? "가지" : " items"})
                 </span>
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl bg-gray-50 border border-gray-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl bg-gray-50">
                 {ingredients.map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-white hover:bg-gold-50 transition-colors border border-gray-100"
+                    className="flex items-center gap-3 p-3 rounded-xl bg-white hover:bg-gold-50 transition-colors"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold-500/20 to-wine-500/20 flex items-center justify-center text-sm font-semibold text-gray-700">
+                    <div className="w-8 h-8 flex items-center justify-center text-sm font-semibold text-gray-700">
                       {index + 1}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -438,9 +435,6 @@ function RecipeDetail({ recipe, onClose, language }) {
             <div className="mb-8">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="flex items-center gap-2 text-xl font-bold text-gray-900">
-                  <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-wine-400 to-wine-600 flex items-center justify-center">
-                    👨‍🍳
-                  </span>
                   {language === "ko" ? "조리 방법" : "Instructions"}
                 </h3>
 
@@ -448,30 +442,20 @@ function RecipeDetail({ recipe, onClose, language }) {
                   <button
                     onClick={translateInstructions}
                     disabled={isTranslating}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500 text-white font-medium
-                             hover:bg-blue-600 transition-all disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    className="text-blue-600 font-medium underline hover:text-blue-700 transition-colors disabled:text-gray-400 disabled:cursor-not-allowed disabled:no-underline"
                   >
                     {isTranslating ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        번역 중...
-                      </>
+                      <>번역 중...</>
                     ) : showTranslation ? (
-                      <>
-                        <span>🔄</span>
-                        원문 보기
-                      </>
+                      <>원문 보기</>
                     ) : (
-                      <>
-                        <span>🌐</span>
-                        한국어로 번역
-                      </>
+                      <>한국어로 번역</>
                     )}
                   </button>
                 )}
               </div>
 
-              <div className="p-6 rounded-2xl bg-gray-50 border border-gray-200">
+              <div className="p-6 rounded-2xl bg-gray-50">
                 <div className="prose prose-gray max-w-none">
                   {showTranslation
                     ? translatedText
@@ -507,17 +491,8 @@ function RecipeDetail({ recipe, onClose, language }) {
                   href={recipe.strYoutube}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-3 px-6 py-4 
-                           bg-red-600 text-white rounded-xl font-bold
-                           hover:bg-red-500 transition-all shadow-lg shadow-red-600/25"
+                  className="text-red-600 font-bold underline hover:text-red-700 transition-colors"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                  </svg>
                   {language === "ko" ? "YouTube에서 보기" : "Watch on YouTube"}
                 </a>
               )}
@@ -526,11 +501,9 @@ function RecipeDetail({ recipe, onClose, language }) {
                   href={recipe.strSource}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-4 
-                           bg-gray-100 text-gray-700 rounded-xl font-medium
-                           hover:bg-gray-200 transition-all border border-gray-200"
+                  className="text-gray-700 font-medium underline hover:text-gray-900 transition-colors"
                 >
-                  🔗 {language === "ko" ? "원본 레시피" : "Original Recipe"}
+                  {language === "ko" ? "원본 레시피" : "Original Recipe"}
                 </a>
               )}
             </div>
