@@ -39,11 +39,10 @@ function Hero({ onRandomClick, language }) {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
         <div
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 mb-6 transition-all duration-700 ${
+          className={`mb-6 transition-all duration-700 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse"></span>
           <span className="text-gold-600 text-sm font-medium">
             {language === "ko"
               ? "전 세계 맛있는 레시피를 만나보세요"
@@ -52,9 +51,12 @@ function Hero({ onRandomClick, language }) {
         </div>
 
         <h1
-          className={`text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6 transition-all duration-700 delay-100 ${
+          className={`hero-title font-bold leading-tight mb-6 transition-all duration-700 delay-100 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
+          style={{
+            fontSize: "clamp(3.5rem, 10vw, 7rem)",
+          }}
         >
           <span className="text-gray-900">
             {language === "ko" ? "오늘 뭐 먹지?" : "What to Cook Today?"}
@@ -100,28 +102,28 @@ function Hero({ onRandomClick, language }) {
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto">
+        <div className="grid grid-cols-3 gap-6 mt-12 max-w-xl mx-auto">
           <div className="text-center">
-            <div className="text-3xl sm:text-4xl font-bold gradient-text mb-2">
+            <div className="text-xl sm:text-2xl font-bold gradient-text mb-1">
               300+
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-xs text-gray-600">
               {language === "ko" ? "레시피" : "Recipes"}
             </div>
           </div>
           <div className="text-center">
-            <div className="text-3xl sm:text-4xl font-bold gradient-text mb-2">
+            <div className="text-xl sm:text-2xl font-bold gradient-text mb-1">
               50+
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-xs text-gray-600">
               {language === "ko" ? "카테고리" : "Categories"}
             </div>
           </div>
           <div className="text-center">
-            <div className="text-3xl sm:text-4xl font-bold gradient-text mb-2">
+            <div className="text-xl sm:text-2xl font-bold gradient-text mb-1">
               150+
             </div>
-            <div className="text-sm text-gray-600">
+            <div className="text-xs text-gray-600">
               {language === "ko" ? "국가별 요리" : "Countries"}
             </div>
           </div>

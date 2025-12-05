@@ -71,13 +71,43 @@ function App() {
     setActiveCategory("");
     setError(null);
     try {
-      let filteredRecipes = await recipeAPI.search(query);
+      let filteredRecipes = [];
 
-      // Pasta 검색 시 Pasta 카테고리만 필터링
+      // Pasta 검색 시 여러 파스타 관련 검색어로 검색
       if (query.toLowerCase() === "pasta") {
-        filteredRecipes = filteredRecipes.filter(
-          (recipe) => recipe.strCategory === "Pasta"
+        const pastaSearches = [
+          "spaghetti",
+          "carbonara",
+          "bolognese",
+          "lasagne",
+          "arrabiata",
+          "penne",
+          "fettuccine",
+          "linguine",
+        ];
+
+        for (const term of pastaSearches) {
+          try {
+            const results = await recipeAPI.search(term);
+            if (results && results.length > 0) {
+              filteredRecipes.push(...results);
+            }
+          } catch (e) {
+            console.log(`검색어 ${term} 실패:`, e);
+          }
+        }
+
+        // 중복 제거
+        const uniqueRecipes = Array.from(
+          new Map(
+            filteredRecipes.map((recipe) => [recipe.idMeal, recipe])
+          ).values()
         );
+        filteredRecipes = uniqueRecipes.slice(0, 12);
+
+        console.log(`파스타 검색 결과: ${filteredRecipes.length}개`);
+      } else {
+        filteredRecipes = await recipeAPI.search(query);
       }
 
       setRecipes(filteredRecipes);

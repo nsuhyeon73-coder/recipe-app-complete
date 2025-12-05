@@ -42,15 +42,18 @@ function Header({
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          {/* Logo - 이모지 완전 제거 */}
+          {/* Logo */}
           <a
             href="#"
             className="flex items-center group"
             onClick={handleLogoClick}
           >
-            <h1 className="text-xl font-bold gradient-text font-display">
+            <div
+              className="text-base font-bold gradient-text"
+              style={{ textTransform: "none" }}
+            >
               Recipe Cook
-            </h1>
+            </div>
           </a>
 
           {/* Desktop Navigation */}

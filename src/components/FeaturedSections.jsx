@@ -275,11 +275,6 @@ function FeaturedSections({ language, onRecipeClick }) {
 
         <div id="special" className="mb-24 scroll-mt-24">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 mb-4">
-              <span className="text-gold-600 font-medium">
-                {language === "ko" ? "특별한 날을 위한" : "For Special Days"}
-              </span>
-            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               {language === "ko" ? (
                 <>
@@ -338,11 +333,6 @@ function FeaturedSections({ language, onRecipeClick }) {
 
         <div id="monthly" className="scroll-mt-24">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-wine-500/10 border border-wine-500/20 mb-4">
-              <span className="text-wine-600 font-medium">
-                {language === "ko" ? "매달 업데이트" : "Updated Monthly"}
-              </span>
-            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               {language === "ko" ? (
                 <>

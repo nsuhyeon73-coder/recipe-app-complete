@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Seongang";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2312-1@1.1/SOGANGUNIVERSITYTTF.woff2")
+    format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,15 +18,72 @@
 
 html {
   scroll-behavior: smooth;
+  font-size: 16px; /* 기본 폰트 크기 */
 }
 
 body {
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: "Seongang", serif !important;
+  font-weight: 500 !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;
   color: #1a1a1a;
   overflow-x: hidden;
+}
+
+/* 모든 텍스트 요소에 폰트 강제 적용 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+a,
+button,
+input,
+textarea,
+select {
+  font-family: "Seongang", serif !important;
+  font-weight: 500 !important;
+}
+
+/* 제목 크기 */
+h1 {
+  font-weight: 500 !important;
+  font-size: 2.5rem !important; /* 40px */
+}
+
+h2 {
+  font-weight: 500 !important;
+  font-size: 1.875rem !important; /* 30px */
+}
+
+h3 {
+  font-size: 1.5rem !important; /* 24px */
+}
+
+h4 {
+  font-size: 1.25rem !important; /* 20px */
+}
+
+/* 본문 텍스트 크기 */
+p {
+  font-size: 1rem !important; /* 16px */
+  line-height: 1.7 !important;
+}
+
+/* 버튼 텍스트 크기 */
+button {
+  font-weight: 500 !important;
+  font-size: 1rem !important; /* 16px */
+}
+
+/* 링크 크기 */
+a {
+  font-size: 0.9375rem !important; /* 15px */
 }
 
 /* Custom scrollbar */
@@ -61,6 +126,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-weight: 500 !important;
 }
 
 /* Gold border gradient */
