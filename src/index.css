@@ -218,6 +218,26 @@ a {
   transform: scale(1.1);
 }
 
+/* Recipe card title text size */
+.recipe-card .recipe-card-title {
+  font-size: 12px !important;
+}
+
+.featured-recipe-title {
+  font-size: 12px !important;
+}
+
+/* Recipe card category and tag text size */
+.recipe-card .recipe-card-tag,
+.recipe-card .recipe-card-category {
+  font-size: 10px !important;
+}
+
+/* Featured sections recipe card category text */
+.featured-recipe-category {
+  font-size: 10px !important;
+}
+
 /* Modal animation */
 @keyframes modalIn {
   from {

@@ -14,6 +14,7 @@ function FeaturedSections({ language, onRecipeClick }) {
     const translations = {
       "Victoria Sponge": "빅토리아 스펀지 케이크",
       "Carrot Cake": "당근 케이크",
+      "Strawberry Cake": "딸기 케이크",
       "Christmas cake": "크리스마스 케이크",
       "Mince Pies": "민스 파이",
       Turkey: "칠면조",
@@ -33,12 +34,12 @@ function FeaturedSections({ language, onRecipeClick }) {
   const allSpecialSearches = [
     {
       name: language === "ko" ? "생일" : "Birthday",
-      search: "victoria sponge",
+      search: "carrot cake",
       position: 0,
     },
     {
       name: language === "ko" ? "생일" : "Birthday",
-      search: "carrot cake",
+      search: "strawberry cake",
       position: 0,
     },
     {
@@ -276,11 +277,6 @@ function FeaturedSections({ language, onRecipeClick }) {
 
         <div id="special" className="mb-24 scroll-mt-24">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 mb-4">
-              <span className="text-gold-600 font-medium">
-                {language === "ko" ? "특별한 날을 위한" : "For Special Days"}
-              </span>
-            </div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               {language === "ko" ? (
                 <>
@@ -324,10 +320,10 @@ function FeaturedSections({ language, onRecipeClick }) {
                   </div>
                 </div>
                 <div className="p-5">
-                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-gold-600 transition-colors line-clamp-2">
+                  <h3 className="font-bold text-gray-900 group-hover:text-gold-600 transition-colors line-clamp-2 featured-recipe-title">
                     {translateRecipeName(recipe.strMeal)}
                   </h3>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-gray-600 mt-1 featured-recipe-category">
                     {recipe.strCategory}
                   </p>
                 </div>

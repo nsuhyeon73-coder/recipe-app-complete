@@ -35,10 +35,7 @@ function RecipeCard({ recipe, onClick, index, language }) {
 
       {/* Content */}
       <div className="p-5">
-        <h3
-          className="font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-gold-600 transition-colors"
-          style={{ fontSize: "14px" }}
-        >
+        <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-gold-600 transition-colors recipe-card-title">
           {translateRecipeName(recipe.strMeal, language)}
         </h3>
 
@@ -52,14 +49,16 @@ function RecipeCard({ recipe, onClick, index, language }) {
                 .map((tag, i) => (
                   <span
                     key={i}
-                    className="px-2 py-0.5 rounded-full bg-wine-500/20 text-wine-600 text-xs"
+                    className="px-2 py-0.5 rounded-full bg-wine-500/20 text-wine-600 recipe-card-tag"
                   >
                     #{tag.trim()}
                   </span>
                 ))}
             </div>
           ) : (
-            <span className="text-sm text-gray-500">{recipe.strCategory}</span>
+            <span className="text-gray-500 recipe-card-category">
+              {recipe.strCategory}
+            </span>
           )}
 
           {/* View Button */}

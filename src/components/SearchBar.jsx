@@ -79,9 +79,8 @@ function SearchBar({ onSearch, onRandom, searchQuery, language }) {
                 setQuery(term);
                 onSearch(term);
               }}
-              className="px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-sm
-                       hover:bg-gold-500/20 hover:text-gold-600 transition-all
-                       border border-gray-200 hover:border-gold-500/30"
+              className="px-2 py-1 text-gray-600 text-sm
+                       hover:text-gold-600 transition-all cursor-pointer"
             >
               {term}
             </button>

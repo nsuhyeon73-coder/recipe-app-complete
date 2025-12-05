@@ -29,7 +29,7 @@ function Footer({ language }) {
             </a>
             <p className="text-gray-600 text-sm leading-relaxed">
               {language === "ko"
-                ? "전 세계의 맛있는 레시피를 한 곳에서! 새로운 요리에 도전해보세요."
+                ? "전 세계의 맛있는 레시피를 한 곳에서! 새로운 요리에 도전해보세요. 여러분들을 기다리고 있습니다!"
                 : "Delicious recipes from around the world in one place! Try new dishes today."}
             </p>
           </div>
@@ -95,9 +95,7 @@ function Footer({ language }) {
             </a>
           </p>
           <div className="flex items-center gap-2">
-            <span className="text-gray-500 text-sm">
-              {language === "ko" ? "제작: React" : "Made with React"}
-            </span>
+            <span className="text-gray-500 text-sm">제작자 : Su Hyun Noh</span>
           </div>
         </div>
       </div>
