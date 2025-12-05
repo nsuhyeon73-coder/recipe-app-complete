@@ -31,9 +31,6 @@ function SearchBar({ onSearch, onRandom, searchQuery, language }) {
             className="relative flex gap-2 p-2 rounded-2xl bg-white border border-gray-200 shadow-lg"
           >
             <div className="flex-1 relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
-                🔍
-              </span>
               <input
                 type="text"
                 value={query}
@@ -63,7 +60,6 @@ function SearchBar({ onSearch, onRandom, searchQuery, language }) {
                        hover:bg-gray-200 transition-all border border-gray-200
                        flex items-center gap-2 whitespace-nowrap"
             >
-              <span className="text-xl">🎲</span>
               <span className="hidden sm:inline">
                 {language === "ko" ? "랜덤" : "Random"}
               </span>

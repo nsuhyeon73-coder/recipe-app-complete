@@ -479,14 +479,14 @@ function Reviews({ language }) {
                         <div className="absolute top-1 right-1 flex gap-1">
                           <button
                             onClick={() => handleEditReview(testimonial)}
-                            className="w-6 h-6 rounded-full bg-blue-100 hover:bg-blue-200 flex items-center justify-center transition-all"
+                            className="text-blue-600 hover:text-blue-800 transition-colors"
                             title={language === "ko" ? "수정" : "Edit"}
                           >
                             <span className="text-xs">✏️</span>
                           </button>
                           <button
                             onClick={() => handleDeleteReview(testimonial.id)}
-                            className="w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-all"
+                            className="text-red-600 hover:text-red-800 transition-colors"
                             title={language === "ko" ? "삭제" : "Delete"}
                           >
                             <span className="text-xs">🗑️</span>
